@@ -46,14 +46,14 @@ btnScrollTo.addEventListener('click', function (e) {
 // navLink.forEach(function (el) {
 //   el.addEventListener('click', function (e) {
 //     e.preventDefault();
-//     //read href
+//     //read href attribute
 //     const id = this.getAttribute('href');
 //     //select the href
 //     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
 //   });
 // });
 
-//add eventlistener to common parent
+//add eventlistener to common parent using event delegation
 //determine what element originated the event
 navLinks.addEventListener('click', function (e) {
   e.preventDefault();
@@ -69,6 +69,7 @@ navLinks.addEventListener('click', function (e) {
 //implement tab component
 tabContainer.addEventListener('click', function (e) {
   const clicked = e.target.closest('.operations__tab');
+
   //guard clause
   if (!clicked) return;
 
@@ -105,22 +106,25 @@ nav.addEventListener('mouseover', handleHoverEffect.bind(0.5));
 
 nav.addEventListener('mouseout', handleHoverEffect.bind(1));
 
-// const h1 = document.querySelector('h1');
-// h1.addEventListener('mouseenter', function (e) {
-//   alert('great you are reading');
+//sticky navigation
+//less performing solution
+// const initCoords = section1.getBoundingClientRect();
+// window.addEventListener('scroll', function () {
+//   if (window.scrollY > initCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
 // });
 
-//generate random colors
-// const randomInt = (min, max) =>
-//   Math.floor(Math.random() * (max - min + 1) + min);
-// const randomColor = () =>
-//   `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
-// document.querySelector('.nav__link').addEventListener('click', function (e) {
-//   this.style.backgroundColor = randomColor();
-// });
-// document.querySelector('.nav__links').addEventListener('click', function (e) {
-//   this.style.backgroundColor = randomColor();
-// });
-// document.querySelector('.nav').addEventListener('click', function (e) {
-//   this.style.backgroundColor = randomColor();
-// });
+//better performing solution using the intersection observer API
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
