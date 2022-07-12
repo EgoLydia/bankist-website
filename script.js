@@ -13,6 +13,7 @@ const navLinks = document.querySelector('.nav__links');
 const tabs = document.querySelectorAll('operations__tab');
 const tabContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
+const nav = document.querySelector('.nav');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -81,6 +82,28 @@ tabContainer.addEventListener('click', function (e) {
     .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add('operations__content--active');
 });
+
+const handleHoverEffect = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    logo.style.opacity = this;
+    // logo.style.opacity = opacity;
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+  }
+};
+
+//passing arguement to eventhandlers
+// nav.addEventListener('mouseover', function (e) {
+//   handleHoverEffect(e, 0.5);
+// });
+
+nav.addEventListener('mouseover', handleHoverEffect.bind(0.5));
+
+nav.addEventListener('mouseout', handleHoverEffect.bind(1));
 
 // const h1 = document.querySelector('h1');
 // h1.addEventListener('mouseenter', function (e) {
