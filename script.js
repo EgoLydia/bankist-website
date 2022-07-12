@@ -14,6 +14,8 @@ const tabs = document.querySelectorAll('operations__tab');
 const tabContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav');
+const allSections = document.querySelectorAll('.section');
+const imgTargets = document.querySelectorAll('img[data-src]');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -106,7 +108,7 @@ nav.addEventListener('mouseover', handleHoverEffect.bind(0.5));
 
 nav.addEventListener('mouseout', handleHoverEffect.bind(1));
 
-//sticky navigation
+// implement sticky navigation
 //less performing solution
 // const initCoords = section1.getBoundingClientRect();
 // window.addEventListener('scroll', function () {
@@ -130,12 +132,11 @@ const headerObserver = new IntersectionObserver(stickyNav, {
 headerObserver.observe(header);
 
 //reveal sections
-const allSections = document.querySelectorAll('.section');
 const revealSection = function (entries, observer) {
   const [entry] = entries;
   if (!entry.isIntersecting) return;
   entry.target.classList.remove('section--hidden');
-  observer.unobserve(entry);
+  observer.unobserve(entry.target);
 };
 const sectionObserver = new IntersectionObserver(revealSection, {
   root: null,
@@ -145,3 +146,21 @@ allSections.forEach(function (section) {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+//lazy loading images
+const loadImage = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+  //replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+};
+const imgObserver = new IntersectionObserver(loadImage, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+});
+imgTargets.forEach(img => imgObserver.observe(img));
