@@ -1,8 +1,5 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
@@ -17,6 +14,7 @@ const nav = document.querySelector('.nav');
 const allSections = document.querySelectorAll('.section');
 const imgTargets = document.querySelectorAll('img[data-src]');
 
+// Modal window
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove('hidden');
@@ -40,8 +38,8 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+//scrolling
 btnScrollTo.addEventListener('click', function (e) {
-  //scrolling
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
